@@ -1,0 +1,22 @@
+{
+  "name": "nodejscountries",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vbitzceo/NodeJSCountries.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vbitzceo/NodeJSCountries/issues"
+  },
+  "homepage": "https://github.com/vbitzceo/NodeJSCountries#readme",
+  "dependencies": {
+    "sqlite3": "^5.0.0"
+  }
+}
