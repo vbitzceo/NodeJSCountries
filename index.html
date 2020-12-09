@@ -1,0 +1,23 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <button id="btnFetchCountries">Fetch Countries</button>
+    <br />
+    <textarea id="txtArea" style="height: 400px; width: 400px"></textarea>
+    <script type="text/javascript">
+        document.querySelector('#btnFetchCountries').addEventListener('click', () => {
+            fetch('http://localhost:1337/api')
+                    .then(response => response.json())
+                    .then(json => {
+                        for (var i = 0; i < json.length; i++)
+                        {
+                            document.querySelector("#txtArea").value += json[i].name + '\n';
+                        }});
+        });
+    </script>
+</body>
+</html>
