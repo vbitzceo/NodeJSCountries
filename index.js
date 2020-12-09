@@ -1,3 +1,4 @@
+const { BADFAMILY } = require('dns');
 const http = require('http');
 const sqlite3 = require('sqlite3').verbose();
 
@@ -8,9 +9,20 @@ function Country(id, name) {
     this.name = name;
 }
 
+function wait(ms)
+{
+    var d = new Date();
+    var d2 = null;
+    do { d2 = new Date(); }
+    while(d2-d < ms);
+}
+
 http.createServer((req, res) => {
 
-    res.writeHead(200, { 'content-type': 'application/json'});
+  res.setHeader('content-type','application/json');
+  //avoiding CORS issues
+  //this says we are allowing requests from any browser from anywhere
+  res.setHeader('Access-Control-Allow-Origin', '*');
 
     let db = new sqlite3.Database(__dirname + '/Countries.db', sqlite3.OPEN_READWRITE, (err) => {
         if (err) {
@@ -20,6 +32,8 @@ http.createServer((req, res) => {
       });
 
       let sql = 'SELECT * FROM country';
+
+      wait(2000); //DO NOT DO IN PROD CODE!
 
       db.all(sql, [], (err, rows) => {
         if (err) {
@@ -37,5 +51,8 @@ http.createServer((req, res) => {
         }
         console.log('Close the database connection.');
       });
+
+      res.writeHead(200);
       res.end(JSON.stringify(arrCountries));
+      
 }).listen(1337, '127.0.0.1');   
