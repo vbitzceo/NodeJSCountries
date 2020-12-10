@@ -9,14 +9,6 @@ function Country(id, name) {
     this.name = name;
 }
 
-function wait(ms)
-{
-    var d = new Date();
-    var d2 = null;
-    do { d2 = new Date(); }
-    while(d2-d < ms);
-}
-
 http.createServer((req, res) => {
 
   res.setHeader('content-type','application/json');
@@ -33,8 +25,6 @@ http.createServer((req, res) => {
 
       let sql = 'SELECT * FROM country';
 
-      wait(2000); //DO NOT DO IN PROD CODE!
-
       db.all(sql, [], (err, rows) => {
         if (err) {
           throw err;
@@ -43,6 +33,8 @@ http.createServer((req, res) => {
           arrCountries.push(new Country(row.Id, row.Name));
           console.log(row.Name);
         });
+
+        res.end(JSON.stringify(arrCountries));
       });
       
       db.close((err) => {
@@ -52,7 +44,7 @@ http.createServer((req, res) => {
         console.log('Close the database connection.');
       });
 
-      res.writeHead(200);
-      res.end(JSON.stringify(arrCountries));
+      //res.writeHead(200);
+      
       
 }).listen(1337, '127.0.0.1');   
