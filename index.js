@@ -1,7 +1,8 @@
 const { BADFAMILY } = require('dns');
 const http = require('http');
+const fs = require('fs');
 const sqlite3 = require('sqlite3').verbose();
-
+const port = 1337;
 const arrCountries = [];
 
 function Country(id, name) {
@@ -10,11 +11,17 @@ function Country(id, name) {
 }
 
 http.createServer((req, res) => {
-
-  res.setHeader('content-type','application/json');
-  //avoiding CORS issues
-  //this says we are allowing requests from any browser from anywhere
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  if (req.url === "/index.html")
+  {
+    res.setHeader('Content-type', 'text/html');
+    let page = fs.createReadStream(__dirname + '/index.html', 'utf-8');
+    page.pipe(res);
+  }
+  else if (req.url === "/api") {
+    res.setHeader('content-type','application/json');
+    //avoiding CORS issues
+    //this says we are allowing requests from any browser from anywhere
+    res.setHeader('Access-Control-Allow-Origin', '*');
 
     let db = new sqlite3.Database(__dirname + '/Countries.db', sqlite3.OPEN_READWRITE, (err) => {
         if (err) {
@@ -29,9 +36,13 @@ http.createServer((req, res) => {
         if (err) {
           throw err;
         }
+        
+        //Clear the array
+        arrCountries.length =0;
+
+        console.log('Processing query results...');
         rows.forEach((row) => {
           arrCountries.push(new Country(row.Id, row.Name));
-          console.log(row.Name);
         });
 
         res.end(JSON.stringify(arrCountries));
@@ -43,8 +54,8 @@ http.createServer((req, res) => {
         }
         console.log('Close the database connection.');
       });
+  }
 
-      //res.writeHead(200);
-      
-      
-}).listen(1337, '127.0.0.1');   
+}).listen(port, function() {
+  console.log(`I'm listening on ${port}`);
+});   
