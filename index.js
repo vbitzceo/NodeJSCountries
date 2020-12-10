@@ -10,14 +10,6 @@ function Country(id, name) {
     this.name = name;
 }
 
-function wait(ms)
-{
-    var d = new Date();
-    var d2 = null;
-    do { d2 = new Date(); }
-    while(d2-d < ms);
-}
-
 http.createServer((req, res) => {
   if (req.url === "/index.html")
   {
@@ -53,7 +45,6 @@ http.createServer((req, res) => {
           arrCountries.push(new Country(row.Id, row.Name));
         });
 
-        res.writeHead(200);
         res.end(JSON.stringify(arrCountries));
       });
       
