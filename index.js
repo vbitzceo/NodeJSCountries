@@ -1,24 +1,23 @@
 const { BADFAMILY } = require('dns');
-const http = require('http');
-const fs = require('fs');
+const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
+
 const port = 1337;
 const arrCountries = [];
+
+const app = express();
 
 function Country(id, name) {
     this.id = id,
     this.name = name;
 }
 
-http.createServer((req, res) => {
-  if (req.url === "/index.html")
-  {
-    res.setHeader('Content-type', 'text/html');
-    let page = fs.createReadStream(__dirname + '/index.html', 'utf-8');
-    page.pipe(res);
-  }
-  else if (req.url === "/api") {
-    res.setHeader('content-type','application/json');
+app.get('/', (req, res, next) => {
+  res.sendFile(__dirname + '/' + "index.html");
+});
+
+app.get('/api', (req, res, next) => {
+  res.setHeader('content-type','application/json');
     //avoiding CORS issues
     //this says we are allowing requests from any browser from anywhere
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -54,8 +53,9 @@ http.createServer((req, res) => {
         }
         console.log('Close the database connection.');
       });
-  }
 
-}).listen(port, function() {
-  console.log(`I'm listening on ${port}`);
-});   
+});
+
+app.listen(port);
+
+
