@@ -10,4 +10,6 @@ app.use(express.static('public'));
 app.use(index);
 app.use(api);
 
+console.log(`The port is ${port}`);
+
 app.listen(port);
